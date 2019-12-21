@@ -17,11 +17,13 @@ y = dataset.iloc[:, 4].values
 
 
 # Encoding categorical data
-onehotencoder = OneHotEncoder(categories="auto")
-X = onehotencoder.fit_transform(X).toarray()
+X[:, 3] = labelencoder.fit_transform(X[:, 3])
+data = X[:,3].reshape(50,1)
+onehotencoder = OneHotEncoder(sparse=False)
+ohe_data = onehotencoder.fit_transform(data)
+X = np.append(X,ohe_data,axis=1)
+X = np.delete(X,3,1)
 
-# Avoiding the Dummy Variable Trap
-X = X[:, 1:]
 
 # Splitting the dataset into the Training set and Test set
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
